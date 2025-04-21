@@ -2,10 +2,6 @@
 
 set -e
 
-# Prepare root backup
-export ROOT=backup
-mkdir -p $ROOT
-
 # MySQL
 echo "---------------------"
 echo "       MySQL         "
@@ -29,12 +25,13 @@ echo "---------------------"
 echo "      Compress       "
 echo "---------------------"
 FILENAME="backup-`date +%Y%m%d`.tar.gz"
-tar -zcvf $FILENAME $ROOT/
+tar -zcvf $FILENAME /backup
 
 # Upload to AWS
 echo "---------------------"
 echo "      Upload         "
 echo "---------------------"
-if [ "$DEBUG" = false ] ; then
-    /usr/bin/aws s3 cp --storage-class "$AWS_S3_STORAGE_CLASS" $FILENAME s3://$AWS_S3_BUCKET
+if [ "$DEBUG" == "false" ] && [ "$AWS_ENABLED" == "true" ]
+then
+    /usr/bin/aws s3 cp --storage-class "$AWS_S3_STORAGE_CLASS" "$FILENAME" "s3://$AWS_S3_BUCKET"
 fi
