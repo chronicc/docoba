@@ -19,6 +19,8 @@ set -eou pipefail
 
 now=$(date +%Y%m%d)
 
+echo "Starting new backup ($now)"
+
 # Get container
 echo "Preparing backup for container '$NAME'"
 id=$(docker ps --filter "name=$NAME" --format "{{.ID}}")
@@ -70,3 +72,6 @@ do
             > "$ROOT/$NAME/$now.$database.sql"
     fi
 done
+
+echo "Finished backup"
+echo "---------------
